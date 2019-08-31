@@ -8,9 +8,9 @@
 (defn sh-cmd
   "Execute a single shell command.
 
-  (sh-command {:cmd [\"ls\"]}))
-  (sh-command {:cmd [\"ls\"]
-               :opts {:dir (expand-path \"~/projects\")}}))"
+  (sh-cmd {:cmd [\"ls\"]}))
+  (sh-cmd {:cmd [\"ls\"]
+           :opts {:dir (expand-path \"~/projects\")}}))"
   [& [{:keys [cmd opts]}]]
   (try
     @(sh cmd opts)
@@ -49,10 +49,10 @@
   Example:
   ;; Run the command `ls` and parse the result on success.
   (sh-exec [\"ls\" \"-alt\"]
-  {:opts {:dir (expand-path \".\")}
-   :success-fn (fn [x]
-                 (if-let [lines (clojure.string/split x #\"\n\")]
-                   (map #(clojure.string/split % #\"\\s+\") (rest lines))))})"
+    {:opts {:dir (expand-path \".\")}
+     :success-fn (fn [x]
+                   (if-let [lines (clojure.string/split x #\"\n\")]
+                     (map #(clojure.string/split % #\"\\s+\") (rest lines))))})"
   [cmd & [{:keys [opts
                   success-fn
                   error-fn]
@@ -65,3 +65,14 @@
       (success-fn out)
       (error-fn {:err err
                  :exit exit}))))
+
+(comment
+  ;; Scratch Area
+  (sh-cmd {:cmd ["ls"]})
+
+  (sh-exec ["ls" "-alt"]
+           {:opts {:dir (expand-path ".")}
+            :success-fn (fn [x]
+                          (if-let [lines (clojure.string/split x #"\n")]
+                            (map #(clojure.string/split % #"\s+") (rest lines))))})
+  )

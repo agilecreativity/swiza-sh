@@ -1,4 +1,4 @@
-(defproject net.b12n.swiza.sh "0.1.0"
+(defproject net.b12n/swiza-sh "0.1.1"
   :description "swiza-sh interact with shell from Clojure"
   :url "http://github.com/agilecreativity/swiza-sh"
   :license {:name "Eclipse Public License"
@@ -7,7 +7,7 @@
             [jonase/eastwood "0.3.5"]
             [lein-auto "0.1.3"]
             [lein-cloverage "1.0.13"]]
-  :dependencies [[b12n.swiza.commons "0.1.1"]
+  :dependencies [[net.b12n/swiza-commons "0.1.2"]
                  [org.clojars.hozumi/clj-commons-exec "1.2.0"]
                  [org.clojure/clojure "1.9.0"]]
   :source-paths ["src/main/clojure"]
