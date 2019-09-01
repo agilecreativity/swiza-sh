@@ -12,7 +12,7 @@ The library rely on the awesome power of [clj-common-exec][1] which wrap the fun
 Just include the following line in your dependency vector
 
 ```clojure
-[b12n.swiza.sh "0.1.0"]
+[net.b12n/swiza-sh "0.1.1"]
 ```
 
 ### Example Usage
@@ -31,8 +31,6 @@ Then to use this in your Clojure project try
           {:cmd ["lein" "deps" ":tree"] :opts {:dir (expand-path "~/apps/swiza/swiza-aws")}}])
 ```
 
-
-
 - Build and run GraalVM native image from Clojure 
 
 ```clojure
@@ -45,7 +43,7 @@ Then to use this in your Clojure project try
 
 You will get output like:
 
-```
+```clojure
 (["drwxr-xr-x" "7" "bchoomnuan" "staff" "224" "Aug" "31" "11:01" "."] 
  ["drwxr-xr-x" "60" "bchoomnuan" "staff" "1920" "Aug" "31" "09:22" ".."] 
  ["-rw-r--r--" "1" "bchoomnuan" "staff" "5" "Aug" "31" "09:53" ".nrepl-port"] 
@@ -53,7 +51,6 @@ You will get output like:
  ["-rw-r--r--" "1" "bchoomnuan" "staff" "2691" "Aug" "30" "22:56" "project.clj"] 
  ["drwxr-xr-x" "4" "bchoomnuan" "staff" "128" "Aug" "23" "22:34" "src"] 
  ["drwxr-xr-x" "4" "bchoomnuan" "staff" "128" "Aug" "24" "01:16" "target"])
-
 ```
 
 - If you like to post-process the result of a single output then try `sh-exec`
@@ -66,7 +63,7 @@ You will get output like:
                           (map #(clojure.string/split % #"\s+") (rest lines))))})
 ```
 
-```
+```clojure
 ;; More example
 (if-let [files (sh-exec ["find" (expand-path "~/apps/pro-scripts")
                            "-type" "f"
