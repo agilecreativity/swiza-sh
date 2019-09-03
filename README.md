@@ -1,5 +1,8 @@
 ## swiza-sh 
 
+[![Clojars Project](https://img.shields.io/clojars/v/net.b12n/swiza-sh.svg)](https://clojars.org/net.b12n/swiza-sh)
+[![Dependencies Status](https://jarkeeper.com/agilecreativity/swiza-sh/status.png)](https://jarkeeper.com/agilecreativity/swiza-sh)
+
 Clojure library designed to wrap the execution of shell script to make it easy to manipulate the result.
 
 The library rely on the awesome power of [clj-common-exec][1] which wrap the functionality of [apache-common-exec][2]
