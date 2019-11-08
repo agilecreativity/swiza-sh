@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+lein cljfmt check project.clj
+lein cljfmt check `find ./src/main/clojure -type f -iname "*.clj"`
+lein cljfmt check `find ./src/test/clojure -type f -iname "*.clj"`

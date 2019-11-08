@@ -15,26 +15,59 @@ The library rely on the awesome power of [clj-common-exec][1] which wrap the fun
 Just include the following line in your dependency vector
 
 ```clojure
-[net.b12n/swiza-sh "0.1.1"]
+[net.b12n/swiza-sh "0.1.3"]
 ```
 
-### Example Usage
+### Available Apis
 
-Then to use this in your Clojure project try 
+- sh-cmd - run a single shell command
+- sh-cmds - run multiple shell commands
+- run-cmds - run multiple shell commands (alternative api)
+- sh-exec - run command with callback function 
 
-- Run multiple shell commands and stop on the first error.
+### Example Usages
 
 ```clojure
 (require '[b12n.swiza.commons :refer [expand-path]])
-(require '[b12n.swiza.sh :refer [sh-cmd sh-cmds sh-exec]])
+(require '[b12n.swiza.sh.core :refer [sh-cmd sh-cmds run-cmds sh-exec]])
+```
 
-;; Build multiple Clojure projects using Leiningen 
+- `run-cmds` : run multiple commands optionally stop on first error
+
+```clojure
+;; a)
+(run-cmds {:dir \".\"
+           :cmds [\"ls -alt\"
+                  \"find . -type f -iname \"*.clj\"]})
+;; b) Similar to the first usage, but stop on the first error
+(run-cmds {:dir \".\"
+           :ignore-error? false
+           :cmds [\"ls -alt\"
+                  \"invalid-command\"
+                  \"find . -type f -iname \"*.clj\"]})
+
+;; c) Run multiple command using that run in start from different directory (ignore error)
+;; e.g. don't specify `:dir` option
+(run-cmds {:cmds [\"ls -alt\"
+                  \"find . -type f -iname \"*.clj\"]})
+
+;; d) Same as above but stop on first error
+(run-cmds {:ignore-error? false
+             :cmds [\"ls -alt\"
+                    \"find . -type f -iname \"*.clj\"]})"
+```
+
+- `sh-cmds` : run multiple command using the original api
+
+Build multiple Clojure projects using Leiningen 
+
+```clojure
 (sh-cmds [{:cmd ["lein" "deps" ":tree"] :opts {:dir (expand-path "~/apps/swiza/swiza-commons")}}
           {:cmd ["lein" "deps" ":tree"] :opts {:dir (expand-path "~/apps/swiza/swiza-jenkins")}}
           {:cmd ["lein" "deps" ":tree"] :opts {:dir (expand-path "~/apps/swiza/swiza-aws")}}])
 ```
 
-- Build and run GraalVM native image from Clojure 
+Build and run GraalVM native image from Clojure 
 
 ```clojure
 ;; Build and run the GraalVM project using `lein native-image`
@@ -56,7 +89,7 @@ You will get output like:
  ["drwxr-xr-x" "4" "bchoomnuan" "staff" "128" "Aug" "24" "01:16" "target"])
 ```
 
-- If you like to post-process the result of a single output then try `sh-exec`
+If you like to post-process the result of a single output then try `sh-exec`
 
 ```clojure
 (sh-exec ["ls" "-al"]

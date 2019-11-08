@@ -5,6 +5,9 @@
 
 (set! *warn-on-reflection* true)
 
+(defn- parse-cmd [s]
+  (clojure.string/split s #"\s+"))
+
 (defn sh-cmd
   "Execute a single shell command.
 
@@ -17,15 +20,65 @@
     (catch Exception e
       (.getMessage e))))
 
+(defn run-cmds
+  "Run multiple commands with simple api.
+
+  Examples:
+
+  ;; a) Run multiple commands, using the shared `dir` options (ignore error by default)
+  (run-cmds {:dir \".\"
+             :cmds [\"ls -alt\"
+                    \"find . -type f -iname \"*.clj\"]})
+
+  ;; b) Similar to the first usage, but stop on the first error
+  (run-cmds {:dir \".\"
+             :ignore-error? false
+             :cmds [\"ls -alt\"
+                    \"invalid-command\"
+                    \"find . -type f -iname \"*.clj\"]})
+
+  ;; c) Run multiple command using that run in start from different directory (ignore error)
+  ;; e.g. don't specify `:dir` option
+  (run-cmds {:cmds [\"ls -alt\"
+                    \"find . -type f -iname \"*.clj\"]})
+
+  ;; d) Same as above but stop on first error
+  (run-cmds {:ignore-error? false
+             :cmds [\"ls -alt\"
+                    \"find . -type f -iname \"*.clj\"]})"
+  [& [{:keys [ignore-error?
+              dir
+              cmds]
+       :or {ignore-error? true}}]]
+  (loop [cmds (if dir
+                (partition 2 (interleave cmds (take (count cmds) (repeat (expand-path dir)))))
+                (partition 2 cmds))
+         error false
+         result []]
+    (if (and (seq cmds)
+             (or ignore-error? (not error)))
+      (let [[c & cs] cmds
+            [cmd d] c
+            {:keys [exit out err]} (sh-cmd {:cmd (parse-cmd cmd) :opts {:dir d}})]
+        (recur cs
+               (not (zero? exit))
+               (conj result {:cmd cmd
+                             :exit exit
+                             :out (if out out "")
+                             :err (if err err "")})))
+      result)))
+
+;; External
+
 (defn sh-cmds
   "Execute multiple shell command stop on the first error.
 
   Example:
   ;; Building multiple Clojure projects with Leiningen
   (sh-cmds [{:cmd [\"lein\" \"deps\" \":tree\"]
-             :opts {:dir (expand-path \"~/apps/swiza/swiza-vault\")}}
-            {:cmd [\"lein\" \"deps\" \":tree\"]
-             :opts {:dir (expand-path \"~/apps/swiza/swiza-jenkins\")}}])"
+           :opts {:dir (expand-path \"~/apps/swiza/swiza-vault\")}}
+          {:cmd [\"lein\" \"deps\" \":tree\"]
+           :opts {:dir (expand-path \"~/apps/swiza/swiza-jenkins\")}}])"
   [commands]
   (loop [cmds commands
          result []]
@@ -44,15 +97,16 @@
       result)))
 
 (defn sh-exec
+
   "Execute a shell command and process the result using the callback style function.
 
   Example:
   ;; Run the command `ls` and parse the result on success.
   (sh-exec [\"ls\" \"-alt\"]
-    {:opts {:dir (expand-path \".\")}
-     :success-fn (fn [x]
-                   (if-let [lines (clojure.string/split x #\"\n\")]
-                     (map #(clojure.string/split % #\"\\s+\") (rest lines))))})"
+         {:opts {:dir (expand-path \".\")}
+          :success-fn (fn [x]
+                        (if-let [lines (clojure.string/split x #\"\n\")]
+                          (map #(clojure.string/split % #\"\\s+\") (rest lines))))})"
   [cmd & [{:keys [opts
                   success-fn
                   error-fn]
@@ -68,11 +122,24 @@
 
 (comment
   ;; Scratch Area
+  ;; --------------------------- ;;
   (sh-cmd {:cmd ["ls"]})
-
+  ;; --------------------------- ;;
   (sh-exec ["ls" "-alt"]
            {:opts {:dir (expand-path ".")}
             :success-fn (fn [x]
                           (if-let [lines (clojure.string/split x #"\n")]
                             (map #(clojure.string/split % #"\s+") (rest lines))))})
+  ;; --------------------------- ;;
+  (->>
+   (run-cmds {:dir "."
+              :ignore-error? false
+              :cmds ["ls -alt"
+                     "find . -type f -iname \"*.clj\""]})
+   (map :out))
+  ;; --------------------------- ;;
+  (run-cmds {:cmds ["ls -alt"
+                    "."
+                    "find . -type f -iname \"*.clj\"" "."]})
+  ;; --------------------------- ;;
   )

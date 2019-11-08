@@ -1,4 +1,4 @@
-(defproject net.b12n/swiza-sh "0.1.2"
+(defproject net.b12n/swiza-sh "0.1.3"
   :description "swiza-sh interact with shell from Clojure"
   :url "http://github.com/agilecreativity/swiza-sh"
   :license {:name "Eclipse Public License"
