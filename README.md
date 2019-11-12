@@ -1,7 +1,8 @@
-## swiza-sh 
+## swiza-sh
 
 [![Clojars Project](https://img.shields.io/clojars/v/net.b12n/swiza-sh.svg)](https://clojars.org/net.b12n/swiza-sh)
 [![Dependencies Status](https://jarkeeper.com/agilecreativity/swiza-sh/status.png)](https://jarkeeper.com/agilecreativity/swiza-sh)
+![ClojarsDownloads](https://img.shields.io/clojars/dt/net.b12n/swiza-sh)
 
 Clojure library designed to wrap the execution of shell script to make it easy to manipulate the result.
 
@@ -23,7 +24,7 @@ Just include the following line in your dependency vector
 - sh-cmd - run a single shell command
 - sh-cmds - run multiple shell commands
 - run-cmds - run multiple shell commands (alternative api)
-- sh-exec - run command with callback function 
+- sh-exec - run command with callback function
 
 ### Example Usages
 
@@ -59,7 +60,7 @@ Just include the following line in your dependency vector
 
 - `sh-cmds` : run multiple command using the original api
 
-Build multiple Clojure projects using Leiningen 
+Build multiple Clojure projects using Leiningen
 
 ```clojure
 (sh-cmds [{:cmd ["lein" "deps" ":tree"] :opts {:dir (expand-path "~/apps/swiza/swiza-commons")}}
@@ -67,7 +68,7 @@ Build multiple Clojure projects using Leiningen
           {:cmd ["lein" "deps" ":tree"] :opts {:dir (expand-path "~/apps/swiza/swiza-aws")}}])
 ```
 
-Build and run GraalVM native image from Clojure 
+Build and run GraalVM native image from Clojure
 
 ```clojure
 ;; Build and run the GraalVM project using `lein native-image`
@@ -80,12 +81,12 @@ Build and run GraalVM native image from Clojure
 You will get output like:
 
 ```clojure
-(["drwxr-xr-x" "7" "bchoomnuan" "staff" "224" "Aug" "31" "11:01" "."] 
- ["drwxr-xr-x" "60" "bchoomnuan" "staff" "1920" "Aug" "31" "09:22" ".."] 
- ["-rw-r--r--" "1" "bchoomnuan" "staff" "5" "Aug" "31" "09:53" ".nrepl-port"] 
- ["-rw-r--r--" "1" "bchoomnuan" "staff" "1328" "Aug" "31" "11:01" "README.md"] 
- ["-rw-r--r--" "1" "bchoomnuan" "staff" "2691" "Aug" "30" "22:56" "project.clj"] 
- ["drwxr-xr-x" "4" "bchoomnuan" "staff" "128" "Aug" "23" "22:34" "src"] 
+(["drwxr-xr-x" "7" "bchoomnuan" "staff" "224" "Aug" "31" "11:01" "."]
+ ["drwxr-xr-x" "60" "bchoomnuan" "staff" "1920" "Aug" "31" "09:22" ".."]
+ ["-rw-r--r--" "1" "bchoomnuan" "staff" "5" "Aug" "31" "09:53" ".nrepl-port"]
+ ["-rw-r--r--" "1" "bchoomnuan" "staff" "1328" "Aug" "31" "11:01" "README.md"]
+ ["-rw-r--r--" "1" "bchoomnuan" "staff" "2691" "Aug" "30" "22:56" "project.clj"]
+ ["drwxr-xr-x" "4" "bchoomnuan" "staff" "128" "Aug" "23" "22:34" "src"]
  ["drwxr-xr-x" "4" "bchoomnuan" "staff" "128" "Aug" "24" "01:16" "target"])
 ```
 
