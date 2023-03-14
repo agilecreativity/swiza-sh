@@ -151,9 +151,11 @@
                   :cmds ["ls -alt"
                          "find . -type f -iname \"*.clj\""]})
        (map :out))
+
   ;; --------------------------- ;;
   (run-cmds {:cmds ["ls -alt"
                     "."
                     "find . -type f -iname \"*.clj\"" "."]})
+
   ;; --------------------------- ;;
   nil)
