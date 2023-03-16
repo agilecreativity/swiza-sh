@@ -9,7 +9,9 @@
             [lein-cloverage "1.1.2"]]
   :dependencies [[net.b12n/swiza-commons "0.1.5"]
                  [org.clojars.hozumi/clj-commons-exec "1.2.0"]
-                 [org.clojure/clojure "1.11.1"]]
+                 [org.clojure/clojure "1.11.1"]
+                 [org.hashids/hashids "1.0.3"]
+                 [tools.namespace "0.2.4-parsefail-SNAPSHOT"]]
   :source-paths ["src/main/clojure"]
   :java-source-paths ["src/main/java"]
   :test-paths ["src/test/clojure"

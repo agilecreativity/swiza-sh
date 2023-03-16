@@ -159,3 +159,35 @@
 
   ;; --------------------------- ;;
   nil)
+
+(comment
+  ;; Try hashids-java
+  (import '[org.hashids Hashids])
+
+  (def hash-ids (Hashids. "this is my salt"))
+
+
+  (defn test-hashids
+    [#^longs ids]
+    (^String .encode hash-ids (long-array ids)))
+
+  (.decode hash-ids (test-hashids [1234]))
+
+  result
+
+  (defn- nanos->ms [elapsed-time]
+    (double (/ elapsed-time 1000000)))
+
+  ;; tools.namespace.repl/refresh
+  (nanos->ms 134324)
+
+  (defn hinted
+    (^Integer [a]
+     [a])
+    (^java.util.List [a & args]
+     [a args]))
+
+  (hinted 12)
+  (hinted 12 3 4)
+
+  nil)
