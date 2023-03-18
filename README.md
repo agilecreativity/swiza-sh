@@ -121,3 +121,7 @@ cd swiza-sh && lein deps :tree
 lein repl
 ;; then hackaway
 ```
+
+### Tips 
+
+- https://hashids.org/java/#how-does-it-work
