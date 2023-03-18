@@ -3,6 +3,7 @@
             [clj-commons-exec :as exec :refer [sh]]
             [clojure.string :as str]))
 
+;; https://github.com/babashka/babashka/issues/1330
 (set! *warn-on-reflection* true)
 
 (defn- parse-cmd [s]
@@ -22,6 +23,14 @@
     @(sh cmd opts)
     (catch Exception e
       (.getMessage e))))
+
+(comment
+
+  (try (/ 1 0)
+       (catch Exception e
+         (.getMessage e))) ;;=> "Divide by zero"
+
+  nil)
 
 (defn run-cmds
   "Run multiple commands with simple api.
@@ -161,19 +170,30 @@
   nil)
 
 (comment
+
+  ;; NOTE: we got the worning here
+  (defn second-ch [s]
+    (.charAt s 1))
+
+  (second-ch "thirty")
+
+  ;; But not here
+  (defn second-ch [#^String s]
+    (.charAt s 1))
+
+  (second-ch "thirty")
+
   ;; Try hashids-java
   (import '[org.hashids Hashids])
 
   (def hash-ids (Hashids. "this is my salt"))
 
-
   (defn test-hashids
-    [#^longs ids]
-    (^String .encode hash-ids (long-array ids)))
+    [ids]
+    (.encode hash-ids (long-array ids)))
 
-  (.decode hash-ids (test-hashids [1234]))
-
-  result
+  (->> (.decode hash-ids (test-hashids [1234]))
+       (.encode hash-ids))
 
   (defn- nanos->ms [elapsed-time]
     (double (/ elapsed-time 1000000)))
@@ -188,6 +208,22 @@
      [a args]))
 
   (hinted 12)
+
   (hinted 12 3 4)
+
+  nil)
+
+(comment
+
+  (defn hinted-single ^String [])
+
+  ;; However, placing the hint before the var name itself appears to have the same effect:
+  (defn hinted-var []
+    "Hello, World")
+
+  ;; eg. no reflection warnings are produced by the following:
+  (set! *warn-on-reflection* true)
+
+  ((fn [] (.length (^String hinted-var))))
 
   nil)
